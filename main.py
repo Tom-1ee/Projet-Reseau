@@ -17,12 +17,10 @@ def main():
     clients = {serv:"serveur"}
     sockets,l1,l2 = [serv],[],[]
     nicknames = ["serv"]
-    
+
     while True:
         reader, writer, error = select.select(sockets,l1,l2)
-        print("AAA")
         for x in reader:
-            print("BBB")
             if x == serv:
                 sc, a = serv.accept()
                 nickname = str(sc.getpeername()) #gives out nickname
