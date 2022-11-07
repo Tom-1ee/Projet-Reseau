@@ -17,5 +17,5 @@ def main():
             print("Received:", data)
         print("Connection closed.")
     except Exception as e:
-        print("CAUGHT IN EXCEPT : ", e)
+        print("Connection proble : ", e)
 main()
