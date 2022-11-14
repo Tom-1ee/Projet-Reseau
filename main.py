@@ -7,6 +7,7 @@ from pickle import NONE
 import sys 
 import socket
 import select
+import time
 
 def main():
 
@@ -30,10 +31,11 @@ def main():
                     Joueur2 = nickname
                 else:
                     Joueur1 = nickname
-                clients[sc] = nickname #gives a name to the socket
+                clients[nickname] = sc #gives a name to the socket
                 print("client connected : ", nickname)
+                nicknames.append(nickname)
                 for other in clients:
-                    name_self = clients[sc]
+                    name_self = clients[nickname]
                     if other != sc and other != serv: #don't send message to self nor to server #SEND message to everyone about the new client who connected 
                         other.send("client connected : ".encode() + name_self.encode() + " \n".encode())
                     else:
@@ -48,21 +50,30 @@ def main():
 
                     grids = [grid(), grid(), grid()]
                     current_player = J1
+                    clients[nicknames[1]].sendall(str(grids[J1]).encode())
                     #grids[J1].display()
-                    for joueur in clients:
-                        if joueur == Joueur1:
-                            joueur.send(grids[J1])
                     while grids[0].gameOver() == -1:
                         if current_player == J1:
                             shot = -1
                             while shot <0 or shot >=NB_CELLS:
-                               shot = int(input ("quel case allez-vous jouer ?"))
+                               clients[nicknames[1]].sendall("quelle case allez-vous jouer ?".encode())
+                               data = "no"
+                               while (type(data) != int):
+                                    time.sleep(0.5)
+                                    print(type(data))
+                                    data = clients[nicknames[1]].recv(1500).decode()
+                                    try:
+                                        data = int(data)
+                                    except:
+                                        print("OULALA PEUT PAS INT CA")
+                               shot = data
+                               grids[0].display()
                                current_player = J2
                         else:
                             shot = random.randint(0,8)
                             while grids[current_player].cells[shot] != EMPTY:
                                 shot = random.randint(0,8)
-                                current_player = J1
+                            current_player = J1
                         if (grids[0].cells[shot] != EMPTY):
                                 grids[current_player].cells[shot] = grids[0].cells[shot]
                         else:
@@ -70,7 +81,8 @@ def main():
                             grids[0].play(current_player, shot)
                             current_player = current_player%2+1
                         if current_player == J1:
-                            grids[J1].display()
+                            None
+                            #grids[J1].display()
                     print("game over")
                     grids[0].display()
                     if grids[0].gameOver() == J1:
