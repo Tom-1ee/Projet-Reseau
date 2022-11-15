@@ -15,11 +15,20 @@ def main():
             if len(data) == 0:
                 break
             data = data.decode()
-            if ("<grid.grid object" in data):
-                print(repr(grid(data)))
+            if ("<class 'grid.grid'" in data):
+                print("AA")
+                #for i in range(3):
+                    #print("|",symbols[i*3], "|",  symbols[i*3+1], "|",  symbols[i*3+2], "|");
+                data = repr(grid(data))
+                print(data.cells)
+                print(data)
+
             elif("quelle case" in data):
-                shot = str(input (""))
+                shot = str(input (data))
                 s.sendall(shot.encode())
+            elif("Quel mode" in data):
+                mode = str(input(data))
+                s.sendall(mode.encode())
             else:
                 print(data)
                 

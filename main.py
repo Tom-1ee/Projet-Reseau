@@ -54,6 +54,15 @@ def main():
                         gamemode = "multiplayer"
                         grids = [grid(), grid(), grid()]
                         current_player = J1
+                        clients[nicknames[current_player]].sendall("Quel mode de jeu souhaitez vous jouez ? \n 1 pour solo \n n'importe quel autre charactère lancera la recherche multijoueur ".encode())
+                        data = clients[nicknames[current_player]].recv(1500).decode()
+                        try:
+                            data = int(data)
+                        except:
+                            clients[nicknames[current_player]].sendall("Vous devez choisir entre 1 et 2".encode())
+                            break  
+                        if (data == 1):
+                            gamemode = "solo"
                         #grids[J1].display()
                         while grids[0].gameOver() == -1:
                             if gamemode == "multiplayer":
@@ -62,8 +71,6 @@ def main():
                                     time.sleep(5)
                                 while (len(nicknames) == 2):
                                     print("il y a : une personne en attente")
-                                    time.sleep(5)
-                                while (len(nicknames) > 2):
                                     clients[nicknames[current_player]].sendall("Waiting For player".encode())
                                     time.sleep(1)
                                     clients[nicknames[current_player]].sendall("Waiting For player•".encode())
@@ -72,8 +79,6 @@ def main():
                                     time.sleep(1)
                                     clients[nicknames[current_player]].sendall("Waiting For player•••".encode())
                                     time.sleep(1)
-                                    print(nicknames)
-                                    print(len(nicknames))
                                 shot = -1
                                 while shot <0 or shot >=NB_CELLS:
                                     clients[nicknames[current_player]].sendall(str(grids[current_player]).encode())
@@ -98,24 +103,35 @@ def main():
                                         grids[0].play(current_player, shot)
                                         current_player = "current_player%2+1"
                                         grids[0].display()
-                            else:
-                                shot = random.randint(0,8)
-                                while grids[current_player].cells[shot] != EMPTY:
+                            else: #Jeu solo
+                                if current_player == J1:
+                                    shot = -1
+                                    while shot <0 or shot >=NB_CELLS:
+                                        clients[nicknames[current_player]].sendall(str(grids[current_player]).encode())
+                                        clients[nicknames[current_player]].sendall("quelle case allez-vous jouer ?".encode())
+                                        data = clients[nicknames[current_player]].recv(1500).decode()
+                                        try:
+                                            data = int(data)
+                                        except:
+                                            clients[nicknames[current_player]].sendall("Vous devez écrire un chiffre entre 0 et 8".encode())
+                                            break
+                                        shot = data
+                                else:
                                     shot = random.randint(0,8)
-                                current_player = J1
-                            if (grids[0].cells[shot] != EMPTY):
+                                    while grids[current_player].cells[shot] != EMPTY:
+                                        shot = random.randint(0,8)
+                                if (grids[0].cells[shot] != EMPTY):
                                     grids[current_player].cells[shot] = grids[0].cells[shot]
-                            else:
-                                grids[current_player].cells[shot] = current_player
-                                grids[0].play(current_player, shot)
-                                current_player = current_player%2+1
-                            if current_player == J1:
-                                None
-                                #grids[J1].display()
+                                else:
+                                    grids[current_player].cells[shot] = current_player
+                                    grids[0].play(current_player, shot)
+                                    current_player = current_player%2+1
+                                if current_player == J1:
+                                    grids[J1].display()
                         print("game over")
                         grids[0].display()
                         if grids[0].gameOver() == J1:
-                            print("You win !") 
+                            clients[nicknames[J1]].sendall("You Win !".encode())
                         else:
-                            print("you loose !")
+                            clients[nicknames[J1]].sendall("You Loose !".encode())
 main()
