@@ -14,6 +14,9 @@ class grid:
         for i in range(NB_CELLS):
             self.cells.append(EMPTY)
 
+    def __str__(self):
+        return str(self.__class__) + ": " + str(self.__dict__)
+
     def play(self, player, cellNum):
         assert(0<= cellNum and cellNum < NB_CELLS)
         assert(self.cells[cellNum] == EMPTY)
