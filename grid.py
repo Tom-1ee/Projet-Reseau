@@ -1,5 +1,5 @@
-
-
+import pickle
+import codecs
 
 symbols = [' ', 'O', 'X']
 EMPTY = 0
@@ -16,6 +16,7 @@ class grid:
 
     def __str__(self):
         return str(self.__class__) + ": " + str(self.__dict__)
+
 
     def play(self, player, cellNum):
         assert(0<= cellNum and cellNum < NB_CELLS)

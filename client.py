@@ -16,11 +16,15 @@ def main():
                 time.sleep(0.1)
             data = data.decode()
             if ("<class 'grid.grid'" in data):
-                #for i in range(3):
-                    #print("|",symbols[i*3], "|",  symbols[i*3+1], "|",  symbols[i*3+2], "|");
-                #data = repr(grid(data))
-                #print(data.cells)
-                print(data)
+
+                #split the string in order to get datas per cells
+                x = data.split("[")
+                y = x[1].split("]")
+                my_cell = y[0].split(",")
+
+                for i in range(3):
+                    print("|",symbols[int(my_cell[i*3])], "|",  symbols[int(my_cell[i*3+1])], "|",  symbols[int(my_cell[i*3+2])], "|");
+                    print("-------------")
 
             elif("quelle case" in data):
                 shot = str(input (data))
@@ -29,7 +33,7 @@ def main():
                 mode = str(input(data))
                 s.sendall(mode.encode())
             elif("END" in data):
-                break
+                print("La partie est terminée, vous pouvez quitter en pressant Ctrl+C")
             else:
                 print(data)
                 
