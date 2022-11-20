@@ -151,34 +151,58 @@ def main():
                                     current_player = current_player%2+1
                                 if current_player == J1:
                                     grids[0].display() #grid[J1]
-                        print("game over")
+                        print("Partie terminée")
                         grids[0].display()
                         if grids[0].gameOver() == J1:
                             if (gamemode == "solo"):
-                                clients[nicknames[J1]].sendall("You Win !".encode())
+                                clients[nicknames[J1]].sendall("Vous avez gagné !".encode())
+                                time.sleep(0.05) #Without that, it sends both upper and lower line at the exact same time, making it look like only one sendall.
+                                time.sleep(0.05) #Without that, it sends both upper and lower line at the exact same time, making it look like only one sendall.
                                 clients[nicknames[J1]].sendall(str(grids[0]).encode())
+                                time.sleep(0.05) #Without that, it sends both upper and lower line at the exact same time, making it look like only one sendall.
                                 clients[nicknames[J1]].sendall("END".encode())
+                                break
                             else:    
-                                clients[nicknames[J1]].sendall("You Win !".encode())
-                                clients[nicknames[J2]].sendall("You Loose !".encode())
+                                clients[nicknames[J1]].sendall("Vous avez gagné !".encode())
+                                clients[nicknames[J2]].sendall("Vous avez perdu !".encode())
                                 clients[nicknames[J2]].sendall(str(grids[0]).encode())
                                 clients[nicknames[J1]].sendall(str(grids[0]).encode())
                                 time.sleep(0.1)
                                 clients[nicknames[J2]].sendall("END".encode())
                                 clients[nicknames[J1]].sendall("END".encode())
+                                break
+                        elif(grids[0].gameOver() == J2):
+                            if (gamemode == "solo"):
+                                clients[nicknames[J1]].sendall("Vous avez perdu !".encode())
+                                clients[nicknames[J1]].sendall(str(grids[0]).encode())
+                                time.sleep(0.05) #Without that, it sends both upper and lower line at the exact same time, making it look like only one sendall.
+                                clients[nicknames[J1]].sendall("END".encode())
+                                break
+                            else:
+                                clients[nicknames[J1]].sendall("Vous avez perdu !".encode())
+                                clients[nicknames[J2]].sendall("Vous avez gagné !".encode())
+                                clients[nicknames[J2]].sendall(str(grids[0]).encode())
+                                clients[nicknames[J2]].sendall(str(grids[0]).encode())
+                                time.sleep(0.1)
+                                clients[nicknames[J2]].sendall("END".encode())
+                                clients[nicknames[J1]].sendall("END".encode())
+                                break
                         else:
                             if (gamemode == "solo"):
-                                clients[nicknames[J1]].sendall("You Loose !".encode())
+                                clients[nicknames[J1]].sendall("Egalité !".encode())
                                 clients[nicknames[J1]].sendall(str(grids[0]).encode())
+                                time.sleep(0.05) #Without that, it sends both upper and lower line at the exact same time, making it look like only one sendall.
                                 clients[nicknames[J1]].sendall("END".encode())
+                                break
                             else:
-                                clients[nicknames[J1]].sendall("You Loose !".encode())
-                                clients[nicknames[J2]].sendall("You Win !".encode())
+                                clients[nicknames[J1]].sendall("Egalité !".encode())
+                                clients[nicknames[J2]].sendall("Egalité !".encode())
                                 clients[nicknames[J2]].sendall(str(grids[0]).encode())
                                 clients[nicknames[J2]].sendall(str(grids[0]).encode())
                                 time.sleep(0.1)
                                 clients[nicknames[J2]].sendall("END".encode())
                                 clients[nicknames[J1]].sendall("END".encode())
+                                break
 
                         
 main()
